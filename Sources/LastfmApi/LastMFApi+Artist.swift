@@ -14,6 +14,9 @@ public struct ArtistInfo {
     public var url: String = ""
     public var biography: String = ""
     public var shortBiography: String? = nil
+	public var imageSmall: [[String? : String?]]? = nil
+	public var imageMedium: String? = nil
+	public var imageLarge: String? = nil
 }
 
 extension LastFMApi {
@@ -31,11 +34,15 @@ extension LastFMApi {
             var mbid: String?
             var url: String?
             var bio: Biography?
+			var image: Image?
         }
         struct Biography: Decodable {
             var content: String?
             var summary: String?
         }
+		struct Image: Decodable {
+			var size: [String? : String?]
+		}
         
         let parameters = ["method": "artist.getinfo",
                           "artist": artist,
@@ -52,6 +59,9 @@ extension LastFMApi {
                 let biographyComponents = biography.components(separatedBy: " <a href")
                 let shortBiography = artist.bio?.summary ?? ""
                 let shortBiographyComponents = shortBiography.components(separatedBy: " <a href")
+				//let image = artist.image.
+				print(artist.image)
+				//print(type(of:artist.image))
                 
                 guard let url = artist.url, biographyComponents.count > 0, biographyComponents[0] != "" else { return .failure(.missingData) }
                 return .success(ArtistInfo(name: artist.name,
